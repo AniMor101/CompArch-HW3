@@ -9,6 +9,10 @@ using namespace std;
 /// Maximum number of registers in the architecture
 constexpr auto MAX_REGS = 32;
 
+// ========================================================================
+// Class name:      InstNode.
+// Description:     an instruction node in a dependency graph.
+// ========================================================================
 class InstNode {
 public:
     int opcode;
@@ -24,6 +28,11 @@ public:
         opcode(opcode), latency(latency), index(index), dep1(dep1), dep2(dep2), depth(depth) {}
 };
 
+
+// ========================================================================
+// Class name:      DepGraph.
+// Description:     an instruction dependency graph.
+// ========================================================================
 class DepGraph {
 private:
     const unsigned int* opsLatency_;
@@ -33,6 +42,13 @@ private:
     vector<int> regs_last_mod_by_inst_;
     vector<InstNode> nodes_;
 
+    // ========================================================================
+    // Method name:     addNode.
+    // Description:     adds an instruction node to the dependency graph.
+    // Parameters:      inst_idx (type int) = the instruction counter index.
+    //                  inst_info (type InstInfo) = instuction propreties.
+    // Return value:    void.
+    // ========================================================================
     void addNode(int inst_idx, InstInfo inst_info) {
         int opcode = inst_info.opcode;
         int latency = opsLatency_[opcode];
@@ -64,7 +80,7 @@ public:
             regs_last_mod_by_inst_[i] = -1;
         }
 
-        for (int inst_idx = 0; inst_idx < numOfInsts; inst_idx++) {
+        for (int inst_idx = 0; inst_idx < (int)numOfInsts; inst_idx++) {
             addNode(inst_idx, progTrace[inst_idx]);
             int dst_reg = progTrace[inst_idx].dstIdx;
             regs_last_mod_by_inst_[dst_reg] = inst_idx;
